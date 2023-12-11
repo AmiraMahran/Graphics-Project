@@ -20,8 +20,7 @@ public class AirHokeyGame extends JFrame {
         public  AirHokeyGame() {
             GLCanvas glcanvas;
             Animator animator;
-
-            airhockeyGlEventListener2  listener = new  airhockeyGlEventListener2();
+            airhockeyGlEventListener2   listener = new airhockeyGlEventListener2 ();
             glcanvas = new GLCanvas();
             glcanvas.addGLEventListener(listener);
             glcanvas.addKeyListener(listener);
