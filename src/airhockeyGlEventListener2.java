@@ -9,6 +9,10 @@ import javax.media.opengl.*;
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
 
+import javax.swing.*;
+
+
+
 
 public class airhockeyGlEventListener2 extends airhokeyListner {
     int index = 0;
@@ -24,8 +28,17 @@ public class airhockeyGlEventListener2 extends airhokeyListner {
     float xDisk = a, yDisk = b;
     boolean movingRight = true;
     boolean movingUp = true;
+    String only1playername , player1name, player2name,playername;
+
+    int speedofDesk;
 int i;
 int count;
+ int animationindex = 4;
+ int soundindex = 7;
+ boolean d =false;
+ boolean u = false;
+
+
     float speedX, speedY, speed = 15, min_speed = 3;
     int direction;
 
@@ -33,7 +46,7 @@ int count;
     Rectangle player1;
 
 
-    String textureNames[] = {"table.jpg", "player1.png", "player2.png", "ball.png"};
+    String textureNames[] = {"table.jpg", "player1.png", "player2.png", "ball.png","startmenu.jpg","pict2menu.jpg"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -80,14 +93,18 @@ int count;
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
 
-        DrawBackground(gl);
+        //DrawBackground(gl);
         handleKeyPress();
         handleKeyPress2();
 
-        if(movingRight) {
-           xDisk+=speedX;
-           yDisk+=speedY;
-        }
+            if (movingRight) {
+                xDisk += speedX;
+                yDisk += speedY;
+            }
+
+
+        DrawStartMenu(gl, animationindex);
+
 
         mins_speed();
 
@@ -134,15 +151,16 @@ int count;
 //                movingUp = true;
 //            }
 //        }
-   
 
 
+if(d) {
+    DrawBackground(gl);
+    DrawDisk(gl, xDisk, yDisk, 3, 1);
 
-        DrawDisk(gl, xDisk, yDisk, 3, 1);
+    DrawSprite1(gl, x, y, 2, 1);
 
-        DrawSprite1(gl, x, y, 2, 1);
-
-        DrawSprite1(gl, x1, y1, 1, 1);
+    DrawSprite1(gl, x1, y1, 1, 1);
+}
 
     }
 
@@ -235,6 +253,29 @@ int count;
 
 
     }
+    private void DrawStartMenu(GL gl , int index) {
+ gl.glEnable(GL.GL_BLEND);
+ gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);// Turn Blending On
+
+ gl.glPushMatrix();
+ gl.glBegin(GL.GL_QUADS);
+ // Front Face
+ gl.glTexCoord2f(0.0f, 0.0f);
+ gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+ gl.glTexCoord2f(1.0f, 0.0f);
+ gl.glVertex3f(1.0f, -1.0f, -1.0f);
+ gl.glTexCoord2f(1.0f, 1.0f);
+ gl.glVertex3f(1.0f, 1.0f, -1.0f);
+ gl.glTexCoord2f(0.0f, 1.0f);
+ gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+ gl.glEnd();
+gl.glPopMatrix();
+
+ gl.glDisable(GL.GL_BLEND);
+
+}
+
+
 
     public void DrawBackground(GL gl) {
         gl.glEnable(GL.GL_BLEND);
@@ -345,6 +386,20 @@ int count;
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
+        System.out.println(e.getX() + " " + (550-e.getY()));
+
+            if (e.getX() >= 30 && e.getX() <= 495) {
+                x = e.getX();
+
+            }
+            if (e.getY() >= 420&& e.getY() <= 803) {
+               y = 550 - e.getY();
+
+            }
+
+
+
 
     }
 
@@ -468,17 +523,230 @@ int count;
         }
     }
 
-//    private void youWin() {
-//        if(xDisk>155&&xDisk<375&&yDisk>20&&yDisk<95){
-//            count++;
-//            System.out.println(" ball raa3a");
-//
-//        }
-//        if(xDisk>155&&xDisk<375&&yDisk>735&&yDisk<830) {
-//            System.out.println(" ball raa3a");
-//
-//        }
+
+
+    public boolean collision_left() {
+        return (ball.intersects(new Rectangle(x - 30,  y+ 23, 23, 23)))// (shifting the rec then gives it the width and lenght it needs)
+                || ball.intersects(new Rectangle(x1- 30, y1 + 23, 23, 23));
+    }
+
+    public boolean collision_up_left() {
+        return ball.intersects(new Rectangle(x- 30, y + 60, 30, 30))
+                || ball.intersects(new Rectangle(x1 - 20, y1 + 60, 30, 30));
+    }
+
+    public boolean collision_up() {
+        return ball.intersects(new Rectangle(x+ 8 , y + 60, 23, 23))
+                || ball.intersects(new Rectangle(x1 + 8 , y1 + 60, 23, 23));
+    }
+
+    public boolean collision_up_right() {
+        return ball.intersects(new Rectangle(x+ 23, y + 60, 30, 30))
+                || ball.intersects(new Rectangle(x1 + 23, y1 + 60, 30, 30));
+    }
+
+    public boolean collision_right() {
+        return ball.intersects(new Rectangle(x +30, y + 23, 23, 23))
+                || ball.intersects(new Rectangle(x1 + 30, y1 + 23, 23, 23));
+    }
+
+    public boolean collision_down_right() {
+        return ball.intersects(new Rectangle(x +23, y, 30, 30))
+                || ball.intersects(new Rectangle(x1 + 23, y1 , 30, 30));
+    }
+
+    public boolean collision_down() {
+        return ball.intersects(new Rectangle(x +8,y , 23, 23))
+                || ball.intersects(new Rectangle(x1 + 8 , y1 , 23, 23));
+    }
+
+    public boolean collision_down_left() {
+        return ball.intersects(new Rectangle(x - 30, y , 30, 30))
+                || ball.intersects(new Rectangle(x1 - 30, y1 , 30, 30));
+
+    }
+
+
+    public void hit() {
+        if (collision_left()) {
+            speedX = -speed;
+            speedY = 0;
+            direction = 1;
+        }
+
+        if (collision_up_left()) {
+            speedX = -speed;
+            speedY = speed;
+            direction = 2;
+        }
+        if (collision_up()) {
+            speedX = 0;
+            speedY = speed;
+            direction = 3;
+        }
+        if (collision_up_right()) {
+            speedX = speed;
+            speedY = speed;
+            direction = 4;
+        }
+
+        if (collision_right()) {
+            speedX = speed;
+            speedY = 0;
+            direction = 5;
+        }
+        if (collision_down_right()) {
+            speedX = speed;
+            speedY = -speed;
+            direction = 6;
+        }
+        if (collision_down()) {
+            speedX = 0;
+            speedY = -speed;
+            direction = 7;
+        }
+        if (collision_down_left()) {
+            speedX = -speed;
+            speedY = -speed;
+            direction = 8;
+        }
+
+
+    }
+
+    private void youWin() {
+        if(xDisk>155&&xDisk<375&&yDisk>20&&yDisk<95){
+            count++;
+            System.out.println(" ball raa3a");
+
+        }
+        if(xDisk>155&&xDisk<375&&yDisk>735&&yDisk<830) {
+            System.out.println(" ball raa3a");
+
+        }
 
 
 
+}
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+
+            if(animationindex == 4) {
+                if (e.getX() >= 100 && e.getX() <= 466 && e.getY() >= 376 && e.getY() <= 485) {
+                    int g = -1;
+                    while(g < 0){
+                        only1playername = JOptionPane.showInputDialog("Enter your name: ");
+                        System.out.println(only1playername);
+                        if(only1playername == null|| only1playername.length() == 0)
+                        continue;
+                    else
+                        g++;
+                        //(playername.length() > 0)
+                    }
+
+                    animationindex = 5;
+                }
+
+                if (e.getX() >= 89 && e.getX() <= 480 && e.getY() >= 510 && e.getY() <= 621) {
+
+                    playername = "";
+                    for(int i = 0 ; i< 2; i++){
+                        int g = -1;
+                        while(g < 0){
+                            playername = JOptionPane.showInputDialog("Enter player " + (i+1) + " name: ");
+                            System.out.println(playername);
+                            if(playername == null ||playername.length() == 0)
+                            continue;
+                        else
+                            g++;
+                        }
+                        if (i == 0)
+                            player1name = playername;
+                        else player2name = playername;
+
+                        playername="";
+                    }
+
+                    animationindex = 5;
+                }
+
+                if (e.getX() >= 195 && e.getX() <= 389 && e.getY() >= 641 && e.getY() <= 726)
+                    animationindex = 6;
+                if (e.getX() >= 219 && e.getX() <= 372 && e.getY() >= 745 && e.getY() <= 822)
+                    System.exit(0);
+            }
+            else if(animationindex == 6) {
+                if(e.getX() >= 41 && e.getX() <= 228 && e.getY() >= 20 && e.getY() <= 81)
+                    animationindex = 4;
+            }
+
+            else {
+                if (e.getX() >= 207 && e.getX() <= 381 && e.getY() >= 302 && e.getY() <= 397)
+                    d = true;
+                if (e.getX() >= 154 && e.getX() <= 427 && e.getY() >= 425 && e.getY() <= 518)
+                    d = true;
+                if (e.getX() >= 161 && e.getX() <= 458 && e.getY() >= 542 && e.getY() <= 640)
+                    d = true;
+                if (e.getX() >= 194 && e.getX() <= 397 && e.getY() >= 676 && e.getY() <= 767)
+                    animationindex = 4;
+
+            }
+
+            System.out.println("x = " + e.getX() + " , y = " + e.getY());
+        }
+
+
+
+
+
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+
+
+    public void  handel_AI() {
+        double c = 0;
+
+        if (xDisk < 350 && xDisk > 50) {
+            c = 1.5; //bot movement with the ball direction
+        } else {
+            if (x1 > 20 && x1 < 350) {
+                c = -1.5;//condition if the bot reached the wall return in the opposite direction
+            }
+        }
+        if (xDisk > x1) {
+            x1 += c * speedofDesk; //if the ball direction was his right
+        }
+        if (xDisk < x1) {
+            x1 -= c * speedofDesk;//if the ball direction was his left
+        }
+
+        if (yDisk > 270 && yDisk < y1) {
+            y1 -= speedofDesk;//to play only in his side
+        } else if (y1 < 490) {
+            y1 += speedofDesk;//to return to his original position if the ball was not in his side
+}
+
+}
 }
