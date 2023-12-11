@@ -92,6 +92,7 @@ int count;
         mins_speed();
 
         BouncingAirHockey();
+        checkCollision();
 
 
         //youWin();
@@ -134,7 +135,7 @@ int count;
 //                movingUp = true;
 //            }
 //        }
-   
+
 
 
 
@@ -468,6 +469,96 @@ int count;
         }
     }
 
+    public boolean collision_left() {
+        return (ball.intersects(new Rectangle(x - 30,  y+ 23, 23, 23)))// (shifting the rec then gives it the width and lenght it needs)
+                || ball.intersects(new Rectangle(x1- 30, y1 + 23, 23, 23));
+    }
+
+    public boolean collision_up_left() {
+        return ball.intersects(new Rectangle(x- 30, y + 60, 30, 30))
+                || ball.intersects(new Rectangle(x1 - 20, y1 + 60, 30, 30));
+    }
+
+    public boolean collision_up() {
+        return ball.intersects(new Rectangle(x+ 8 , y + 60, 23, 23))
+                || ball.intersects(new Rectangle(x1 + 8 , y1 + 60, 23, 23));
+    }
+
+    public boolean collision_up_right() {
+        return ball.intersects(new Rectangle(x+ 23, y + 60, 30, 30))
+                || ball.intersects(new Rectangle(x1 + 23, y1 + 60, 30, 30));
+    }
+
+    public boolean collision_right() {
+        return ball.intersects(new Rectangle(x +30, y + 23, 23, 23))
+                || ball.intersects(new Rectangle(x1 + 30, y1 + 23, 23, 23));
+    }
+
+    public boolean collision_down_right() {
+        return ball.intersects(new Rectangle(x +23, y, 30, 30))
+                || ball.intersects(new Rectangle(x1 + 23, y1 , 30, 30));
+    }
+
+    public boolean collision_down() {
+        return ball.intersects(new Rectangle(x +8,y , 23, 23))
+                || ball.intersects(new Rectangle(x1 + 8 , y1 , 23, 23));
+    }
+
+    public boolean collision_down_left() {
+        return ball.intersects(new Rectangle(x - 30, y , 30, 30))
+                || ball.intersects(new Rectangle(x1 - 30, y1 , 30, 30));
+
+    }
+
+
+    public void checkCollision() {
+        if (collision_left()) {
+            speedX = -speed;
+            speedY = 0;
+            direction = 1;
+        }
+
+        if (collision_up_left()) {
+            speedX = -speed;
+            speedY = speed;
+            direction = 2;
+        }
+        if (collision_up()) {
+            speedX = 0;
+            speedY = speed;
+            direction = 3;
+        }
+        if (collision_up_right()) {
+            speedX = speed;
+            speedY = speed;
+            direction = 4;
+        }
+
+        if (collision_right()) {
+            speedX = speed;
+            speedY = 0;
+            direction = 5;
+        }
+        if (collision_down_right()) {
+            speedX = speed;
+            speedY = -speed;
+            direction = 6;
+        }
+        if (collision_down()) {
+            speedX = 0;
+            speedY = -speed;
+            direction = 7;
+        }
+        if (collision_down_left()) {
+            speedX = -speed;
+            speedY = -speed;
+            direction = 8;
+        }
+
+
+    }
+
+
 //    private void youWin() {
 //        if(xDisk>155&&xDisk<375&&yDisk>20&&yDisk<95){
 //            count++;
@@ -478,6 +569,9 @@ int count;
 //            System.out.println(" ball raa3a");
 //
 //        }
+
+
+
 
 
 
