@@ -24,6 +24,8 @@ public class AirHokeyGame extends JFrame {
             glcanvas = new GLCanvas();
             glcanvas.addGLEventListener(listener);
             glcanvas.addKeyListener(listener);
+            glcanvas.addMouseMotionListener(listener);
+            glcanvas.addMouseListener(listener);
             getContentPane().add(glcanvas, BorderLayout.CENTER);
             animator = new FPSAnimator(30);
             animator.add(glcanvas);
