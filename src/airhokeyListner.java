@@ -7,5 +7,5 @@ import javax.media.opengl.GLEventListener;
 
 public abstract class airhokeyListner implements GLEventListener, KeyListener,MouseMotionListener, MouseListener {
 
-    protected String assetsFolderName = "Assets//Air_Hocky";
+    protected String assetsFolderName = "Assets//";
 }

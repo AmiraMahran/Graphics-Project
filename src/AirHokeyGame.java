@@ -31,7 +31,7 @@ public class AirHokeyGame extends JFrame {
             animator.add(glcanvas);
             animator.start();
 
-            setTitle("fishGame Test");
+            setTitle("Air_Hockey");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setSize(600, 900);
             setLocationRelativeTo(null);

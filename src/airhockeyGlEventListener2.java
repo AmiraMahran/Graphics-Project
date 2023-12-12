@@ -5,7 +5,7 @@ import com.sun.opengl.util.j2d.TextRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
+//import java.io.IOException;
 import javax.media.opengl.*;
 
 import java.util.BitSet;
@@ -34,7 +34,7 @@ boolean pause;
     String only1playername , player1name, player2name,playername;
 
     int speedofDesk=3;
-int i,j,k;
+int i,timeTaken,k;
 int count;
  int animationindex = 4;
  int soundindex = 7;
@@ -52,7 +52,7 @@ boolean bot;
 
     TextRenderer ren = new TextRenderer(new Font("sanaSerif", Font.BOLD, 10));
     String textureNames[] = {"table.jpg", "player1.png", "player2.png", "ball.png","startmenu.jpg","pict2menu.jpg",
-            "Pause.png", "musicOff.png", "musicOn"};
+            "Pause.png" , "help.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     AudioInputStream gameAudio ;
     Clip clip;
@@ -73,7 +73,7 @@ boolean bot;
 
         for (int i = 0; i < textureNames.length; i++) {
             try {
-                texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
+                texture[i] = TextureReader.readTexture(assetsFolderName + textureNames[i], true);
                 gl.glBindTexture(GL.GL_TEXTURE_2D, textures[i]);
 
 //                mipmapsFromPNG(gl, new GLU(), texture[i]);
@@ -85,7 +85,7 @@ boolean bot;
                         GL.GL_UNSIGNED_BYTE,
                         texture[i].getPixels() // Imagedata
                 );
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println(e);
                 e.printStackTrace();
             }try{
@@ -124,24 +124,10 @@ boolean bot;
         }else {
             handleKeyPress2();
         }
-
-
-                 //DrawSoundIcon(gl, )
-//                 Draw();
-
-
-
-
         mins_speed();
-//        start();
         BouncingAirHockey();
         checkCollision();
-
-        //youWin();
-
         wins();
-
-
         DrawStartMenu(gl, animationindex);
 
 if(d) {
@@ -173,9 +159,6 @@ if(d) {
 
     }
 
-
-
-
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
 
@@ -205,37 +188,6 @@ if(d) {
         gl.glPopMatrix();
 
         gl.glDisable(GL.GL_BLEND);
-//        System.out.println(xDisk + " " + yDisk);
-//        System.out.println(x + " " + y);
-
-
-    }
-
-    public void DrawSprite2(GL gl, int x1, int y1, int index, float scale) {
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
-
-        gl.glPushMatrix();
-        gl.glTranslated(x1 / (maxWidth / 2.0) - 1, y1 / (maxHeight / 2.0) - 0.09, 0);
-        gl.glScaled(0.1 * scale, 0.1 * scale, 1);
-        gl.glRotated(0, 0, 0, -90);
-        //System.out.println(x +" " + y);
-        gl.glBegin(GL.GL_QUADS);
-        // Front Face
-        gl.glTexCoord2f(0.0f, 0.0f);
-        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 0.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 1.0f);
-        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-        gl.glTexCoord2f(0.0f, 1.0f);
-        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-        gl.glEnd();
-        gl.glPopMatrix();
-
-        gl.glDisable(GL.GL_BLEND);
-
-
     }
 
     public void DrawDisk(GL gl, float x2, float y2, int index, int scale) {
@@ -257,10 +209,7 @@ if(d) {
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glEnd();
         gl.glPopMatrix();
-
         gl.glDisable(GL.GL_BLEND);
-
-
     }
     private void DrawStartMenu(GL gl , int index) {
  gl.glEnable(GL.GL_BLEND);
@@ -306,13 +255,6 @@ gl.glPopMatrix();
 
         gl.glDisable(GL.GL_BLEND);
     }
-
-
-
-    /*
-     * KeyListener
-     */
-
     public void handleKeyPress() {
 
         if (isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -363,7 +305,6 @@ gl.glPopMatrix();
     }
 
     public BitSet keyBits = new BitSet(256);
-
     @Override
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
@@ -387,19 +328,10 @@ gl.glPopMatrix();
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
-
     @Override
     public void mouseMoved(MouseEvent e) {
-
             }
-
-
-
-
-
-
 
     public void BouncingAirHockey() {
 
@@ -412,7 +344,7 @@ gl.glPopMatrix();
                     if (bot &&yDisk > 405) {
                         speedY = min_speed - speedY;
                         direction = 6;
-                    }  //if the bot stuck with the ball
+                    }
                 }
                 break;
             case 2:  // up-left
@@ -501,14 +433,9 @@ gl.glPopMatrix();
                     direction = 6; // down-right
                 }
                 break;
-
         }
-
-
     }
-
-
-    public void mins_speed(){  //function to decrease the speed of the ball
+    public void mins_speed(){  //function to decrease the speed of the disk
         if (speedX == min_speed || speedY == min_speed
                 || speedX == -min_speed || speedY == -min_speed) {
             i++;
@@ -519,18 +446,14 @@ gl.glPopMatrix();
             }
         }
     }
-
-
     public boolean collision_left() {
         return ball.intersects(new Rectangle(x - 30,  y+ 23, 23, 23))// (shifting the rec then gives it the width and lenght it needs)
                 || ball.intersects(new Rectangle(x1- 30, y1 + 23, 23, 23));
     }
-
     public boolean collision_up_left() {
         return ball.intersects(new Rectangle(x- 30, y + 60, 30, 30))
                 || ball.intersects(new Rectangle(x1 - 20, y1 + 60, 30, 30));
     }
-
     public boolean collision_up() {
         return ball.intersects(new Rectangle(x+ 8 , y + 60, 23, 23))
                 || ball.intersects(new Rectangle(x1 + 8 , y1 + 60, 23, 23));
@@ -561,19 +484,13 @@ gl.glPopMatrix();
                 || ball.intersects(new Rectangle(x1 - 30, y1 , 30, 30));
 
     }
-
-
-
     public void checkCollision() {
-
-
 
         if (collision_left()) {
             speedX = -speed;
             speedY = 0;
-            direction = 1;
+            direction = 1;//left
         }
-
         if (collision_up_left()) {
             speedX = -speed;
             speedY = speed;
@@ -610,23 +527,7 @@ gl.glPopMatrix();
             speedY = -speed;
             direction = 8;
         }
-
-
     }
-
-
-//    private void youWin() {
-//        if(xDisk>155&&xDisk<375&&yDisk>20&&yDisk<95){
-//            count++;
-//            System.out.println(" ball raa3a");
-//
-//        }
-//        if(xDisk>155&&xDisk<375&&yDisk>735&&yDisk<830) {
-//            System.out.println(" ball raa3a");
-//
-//        }
-
-
 
 
 
@@ -635,26 +536,20 @@ gl.glPopMatrix();
         if (xDisk > 180 && xDisk < 375) {
             if (yDisk >= 803 || yDisk <= 23) {
 
-                if (yDisk >= 803) {
+                if (yDisk >= 803) {//max of table
                     f = true;
                 }
-                j++;
-                ren.beginRendering(100, 100);
-                if (f) {
-                    ren.setColor(Color.RED);
-                } else {
-                    ren.setColor(Color.BLUE);
-                }
-                ren.draw("GOAL!", 33, 48);
-                ren.setColor(Color.WHITE);
-                ren.endRendering();
+                timeTaken++;
                 speedX = 0;
                 speedY = 0;
-                if (j > 60) {
+                if (timeTaken > 30) {
                     if (f) {
                         score2++;
-                        if(score2==2) {
-                            JOptionPane.showConfirmDialog(null, player1name+" is  wins by "+score2);
+                        if(score2==3) {
+                            if(bot)   JOptionPane.showConfirmDialog(null, player1name+"  wins by "+score2);
+
+                            else
+                                JOptionPane.showConfirmDialog(null, player1name+" is  wins by "+score2);
                             defult();
                             score2=0;
                             score1=0;
@@ -662,8 +557,10 @@ gl.glPopMatrix();
                         }
                     } else {
                         score1++;
-                        if(score1==2) {
-                            JOptionPane.showConfirmDialog(null, player2name+" is  wins by "+score1 );
+                        if(score1==3) {
+                            if(bot)   JOptionPane.showConfirmDialog(null, "The computer  wins by "+score1);
+
+                               else  JOptionPane.showConfirmDialog(null, player2name+" is  wins by "+score1 );
                             defult();
                             score1=0;
                             score2=0;
@@ -672,7 +569,7 @@ gl.glPopMatrix();
                     }
 
                     defult();
-                    j = 0;
+                    timeTaken = 0;
                 }
 
             }
@@ -741,11 +638,11 @@ gl.glPopMatrix();
                 }
 
                 if (e.getX() >= 195 && e.getX() <= 389 && e.getY() >= 641 && e.getY() <= 726)
-                    animationindex = 6;
+                    animationindex = 7;
                 if (e.getX() >= 219 && e.getX() <= 372 && e.getY() >= 745 && e.getY() <= 822)
                     System.exit(0);
             }
-            else if(animationindex == 6) {
+            else if(animationindex == 7) {
                 if(e.getX() >= 41 && e.getX() <= 228 && e.getY() >= 20 && e.getY() <= 81)
                     animationindex = 4;
             }
@@ -753,8 +650,13 @@ gl.glPopMatrix();
             else {
                 if (e.getX() >= 207 && e.getX() <= 381 && e.getY() >= 302 && e.getY() <= 397)
                     d = true;
-                if (e.getX() >= 154 && e.getX() <= 427 && e.getY() >= 425 && e.getY() <= 518)
+                if (e.getX() >= 154 && e.getX() <= 427 && e.getY() >= 425 && e.getY() <= 518){
                     d = true;
+                    speed=30;
+                    min_speed=5;
+                }
+
+
                 if (e.getX() >= 161 && e.getX() <= 458 && e.getY() >= 542 && e.getY() <= 640)
                     d = true;
                 if (e.getX() >= 194 && e.getX() <= 397 && e.getY() >= 676 && e.getY() <= 767)
@@ -769,41 +671,26 @@ gl.glPopMatrix();
                     //d = false;
                 }
             }
-        if (e.getX() >= 139 && e.getX() <= 461 && e.getY() >= 353 && e.getY() <= 441){
-        d = true ;
-        //pause = false;
+//        if (e.getX() >= 139 && e.getX() <= 461 && e.getY() >= 353 && e.getY() <= 441){
+//        d = true ;
+//        pause = false;
     }
 
 
-            System.out.println("x = " + e.getX() + " , y = " + e.getY());
-        }
-
-
-
-
-
-
+//            System.out.println("x = " + e.getX() + " , y = " + e.getY());
+//        }
     @Override
     public void mousePressed(MouseEvent e) {
-
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
-
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
-
     @Override
     public void mouseExited(MouseEvent e) {
-
     }
-
-
     public void drawscore() {
         ren.beginRendering(120, 120);
         ren.setColor(Color.BLACK);
@@ -813,56 +700,14 @@ gl.glPopMatrix();
         ren.setColor(Color.WHITE);
         ren.endRendering();
     }
-
-    public void drawready() {
-        ren.beginRendering(100, 100);
-        ren.setColor(Color.BLACK);
-        ren.draw("READY?", 30, 48);
-
-        ren.setColor(Color.WHITE);
-        ren.endRendering();
-    }
-
-    public void drawstart() {
-        ren.beginRendering(100, 100);
-        ren.setColor(Color.BLACK);
-        ren.draw("GOOOO!", 30, 48);
-
-        ren.setColor(Color.WHITE);
-        ren.endRendering();
-    }
-
-    public void start() {
-        if (start) {
-
-            if (i < 30) {
-                drawready();
-            } else {
-                drawstart();
-            }
-            i++;
-            if (i > 60) {
-                start = false;
-                i = 0;
-            }
-
-        }
-    }
-
-
-
-
-
-
-
     public void  handel_AI() {
         double c = 0;
 
         if (xDisk < 350 && xDisk > 50) {
-            c = 2;
+            c = 1.5;
         } else {
             if (x1 > 20 && x1 < 350) {
-                c = -2;
+                c = -1.5;
             }
             if (xDisk > x1) {
                 x1 += c * speedofDesk; //if the ball direction was his right
@@ -876,37 +721,6 @@ gl.glPopMatrix();
             } else if (y1 < 490) {
                 y1 += speedofDesk;//to return to his original position if the ball was not in his side
             }
-
         }
-
-
     }
-
-    private void DrawSoundIcon(GL gl, int index , int scale) {
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);  // Turn Blending On
-
-        gl.glPushMatrix();
-        gl.glTranslated(x / (maxWidth / 2.0) - 0.1, y / (maxHeight) + 0.9, 0);
-        gl.glScaled(0.1*scale, 0.1*scale, 1);
-        gl.glRotated(0,0,0,-90);
-        //System.out.println(x +" " + y);
-        gl.glBegin(GL.GL_QUADS);
-        // Front Face
-        gl.glTexCoord2f(0.0f, 0.0f);
-        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 0.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 1.0f);
-        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-        gl.glTexCoord2f(0.0f, 1.0f);
-        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-        gl.glEnd();
-        gl.glPopMatrix();
-
-        gl.glDisable(GL.GL_BLEND);
-        System.out.println(x +" "+y);
-    }
-
-
 }
